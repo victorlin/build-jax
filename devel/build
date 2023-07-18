@@ -1,0 +1,9 @@
+#!/bin/bash
+
+docker buildx build \
+    --build-arg PYTHON_VERSION=310 \
+    --build-arg JAXLIB_VERSION=0.4.9 \
+    --network host \
+    --tag jax-build \
+    --output type=local,dest=dist/ \
+    .

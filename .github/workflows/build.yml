@@ -1,0 +1,23 @@
+name: Build
+
+on:
+- push
+- workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: git fetch origin 'refs/tags/*:refs/tags/*'
+
+      - run: git -c user.name='NULL' -c user.email='NULL' merge --squash jax-v0.4.9 --allow-unrelated-histories --no-commit
+
+      - run: ./devel/build
+
+      - if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: dist/
