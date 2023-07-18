@@ -1,10 +1,5 @@
 # Setup: pull cross-compilation tools.
-FROM --platform=$BUILDPLATFORM tonistiigi/xx AS xx
-
 FROM --platform=$BUILDPLATFORM python:3.10-slim-bullseye as builder
-
-# Copy cross-compilation tools.
-COPY --from=xx / /
 
 # Build jaxlib from source.
 # https://jax.readthedocs.io/en/latest/developer.html#building-jaxlib-from-source
@@ -12,9 +7,8 @@ COPY --from=xx / /
 ARG PYTHON_VERSION
 ARG JAXLIB_VERSION
 
-RUN apt-get update && apt-get install -y --no-install-recommends crossbuild-essential-arm64
-
-RUN xx-apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    crossbuild-essential-arm64 \
     gcc \
     g++
 
