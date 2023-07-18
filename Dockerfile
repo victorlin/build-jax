@@ -15,7 +15,8 @@ ARG JAXLIB_VERSION
 RUN apt-get update && apt-get install -y --no-install-recommends crossbuild-essential-arm64
 
 RUN xx-apt-get install -y \
-    gcc
+    gcc \
+    g++
 
 RUN pip install numpy wheel build
 
