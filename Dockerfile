@@ -1,4 +1,4 @@
-FROM quay.io/pypa/manylinux_2_28_aarch64 as builder
+FROM --platform=$BUILDPLATFORM python:3.10-slim-bullseye as builder
 
 # Build jaxlib from source.
 # https://jax.readthedocs.io/en/latest/developer.html#building-jaxlib-from-source
@@ -6,8 +6,7 @@ FROM quay.io/pypa/manylinux_2_28_aarch64 as builder
 ARG PYTHON_VERSION
 ARG JAXLIB_VERSION
 
-RUN ln -s /opt/python/cp${PYTHON_VERSION}-cp${PYTHON_VERSION}/bin/pip /usr/local/bin/pip \
-    && ln -s /opt/python/cp${PYTHON_VERSION}-cp${PYTHON_VERSION}/bin/python /usr/local/bin/python
+RUN apt-get update && apt-get install -y --no-install-recommends crossbuild-essential-arm64
 
 RUN pip install numpy wheel build
 
@@ -15,7 +14,7 @@ WORKDIR /builder
 
 COPY . .
 
-RUN python build/build.py
+RUN python build/build.py  --bazel_option=--crosstool_top=//toolchain:toolchain --target_cpu=aarch64 --bazel_options=--override_repository=org_tensorflow=/path/to/the/tensorflow/checkout
 
 RUN auditwheel repair dist/jaxlib-${JAXLIB_VERSION}-cp${PYTHON_VERSION}-none-manylinux_2_28_aarch64.whl
 
