@@ -14,6 +14,8 @@ jobs:
 
       - run: git -c user.name='NULL' -c user.email='NULL' merge --squash jax-v0.4.9 --allow-unrelated-histories --no-commit
 
+      - uses: docker/setup-qemu-action@v2
+
       - run: ./devel/build
 
       - if: always()
