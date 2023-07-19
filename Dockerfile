@@ -12,13 +12,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     g++
 
-RUN pip install numpy wheel build
+RUN pip install numpy wheel build auditwheel
 
 WORKDIR /builder
 
 COPY . .
 
 RUN python build/build.py  --bazel_option=--crosstool_top=//toolchain:toolchain --target_cpu=aarch64 --bazel_options=--override_repository=org_tensorflow=/path/to/the/tensorflow/checkout
+
+RUN auditwheel repair dist/jaxlib-${JAXLIB_VERSION}-cp${PYTHON_VERSION}-cp${PYTHON_VERSION}-manylinux2014_aarch64.whl
 
 FROM scratch
 
