@@ -4,17 +4,46 @@ on:
 - push
 - workflow_dispatch
 
+env:
+  PYTHON_VERSION: '310'
+  JAXLIB_VERSION: '0.4.9'
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
-      - run: git fetch origin 'refs/tags/*:refs/tags/*'
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
 
-      - run: git -c user.name='NULL' -c user.email='NULL' merge --squash jax-v0.4.9 --allow-unrelated-histories --no-commit
+      - name: Get source code for JAX version
+        run: |
+          git fetch origin 'refs/tags/*:refs/tags/*'
+          git -c user.name='NULL' -c user.email='NULL' merge --squash jax-v${JAXLIB_VERSION} --allow-unrelated-histories --no-commit
 
-      - run: ./devel/build
+      - name: Install build dependencies
+        run: |
+          apt-get update && apt-get install -y --no-install-recommends \
+              crossbuild-essential-arm64 \
+              gcc \
+              g++
+
+      - name: Install pip dependencies
+        run: pip install numpy wheel build auditwheel
+
+      - name: Build
+        run: python build/build.py  --bazel_option=--crosstool_top=//toolchain:toolchain --target_cpu=aarch64 --bazel_options=--override_repository=org_tensorflow=/path/to/the/tensorflow/checkout
+
+      - name: Cache dist/
+        uses: actions/cache@v3
+        with:
+          path: dist/
+          key: ${{ runner.os }}-${{ env.PYTHON_VERSION }}-${{ env.JAXLIB_VERSION }}
+
+      - name: Vendor dependencies
+        run: auditwheel repair dist/jaxlib-${JAXLIB_VERSION}-cp${PYTHON_VERSION}-cp${PYTHON_VERSION}-manylinux2014_aarch64.whl
 
       - if: always()
         uses: actions/upload-artifact@v3
