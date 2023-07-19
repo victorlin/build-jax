@@ -45,7 +45,7 @@ cc_toolchain_config(
     cpu = "aarch64",
     cxx_builtin_include_directories = [
         "/usr/aarch64-linux-gnu/include",
-        "/usr/lib/gcc-cross/aarch64-linux-gnu/11/include",
+        "/usr/lib/gcc-cross/aarch64-linux-gnu/10/include",
         "/usr/local/include",
         "/usr/include",
         "/usr/include/c++/11",
