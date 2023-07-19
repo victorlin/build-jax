@@ -8,7 +8,6 @@ ARG PYTHON_VERSION
 ARG JAXLIB_VERSION
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
     crossbuild-essential-arm64 \
     gcc \
     g++
