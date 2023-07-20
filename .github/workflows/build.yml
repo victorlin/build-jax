@@ -36,6 +36,9 @@ jobs:
           ln -s /opt/python/cp${PYTHON_VERSION}-cp${PYTHON_VERSION}/bin/pip /usr/local/bin/manylinux-pip
           ln -s /opt/python/cp${PYTHON_VERSION}-cp${PYTHON_VERSION}/bin/python /usr/local/bin/manylinux-python
 
+          # Fix https://github.com/pypa/manylinux/issues/357
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/
+
       - name: Install pip dependencies
         run: manylinux-pip install numpy wheel build auditwheel
 
