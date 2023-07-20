@@ -25,7 +25,7 @@ jobs:
 
       - name: Install build dependencies
         run: |
-          sudo apt-get update && apt-get install -y --no-install-recommends \
+          sudo apt-get update && sudo apt-get install -y --no-install-recommends \
               crossbuild-essential-arm64 \
               gcc \
               g++
