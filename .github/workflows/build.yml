@@ -33,14 +33,14 @@ jobs:
 
       - name: Set python executables
         run: |
-          ln -s /opt/python/cp${PYTHON_VERSION}-cp${PYTHON_VERSION}/bin/pip /usr/local/bin/pip
-          ln -s /opt/python/cp${PYTHON_VERSION}-cp${PYTHON_VERSION}/bin/python /usr/local/bin/python
+          ln -s /opt/python/cp${PYTHON_VERSION}-cp${PYTHON_VERSION}/bin/pip /usr/local/bin/manylinux-pip
+          ln -s /opt/python/cp${PYTHON_VERSION}-cp${PYTHON_VERSION}/bin/python /usr/local/bin/manylinux-python
 
       - name: Install pip dependencies
-        run: pip install numpy wheel build auditwheel
+        run: manylinux-pip install numpy wheel build auditwheel
 
       - name: Build
-        run: python build/build.py  --bazel_option=--crosstool_top=//toolchain:toolchain --target_cpu=aarch64 --bazel_options=--override_repository=org_tensorflow=/path/to/the/tensorflow/checkout
+        run: manylinux-python build/build.py  --bazel_option=--crosstool_top=//toolchain:toolchain --target_cpu=aarch64 --bazel_options=--override_repository=org_tensorflow=/path/to/the/tensorflow/checkout
 
       - name: Cache dist/
         uses: actions/cache@v3
