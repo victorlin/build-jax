@@ -4,13 +4,17 @@ on:
 - push
 - workflow_dispatch
 
-env:
-  PYTHON_VERSION: '310'
-  JAXLIB_VERSION: '0.4.9'
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      # Use an image built for manylinux cross-compilation.
+      # https://github.com/rust-cross/manylinux-cross
+      image: messense/manylinux2014-cross:x86_64
+      env:
+        PYTHON_VERSION: '310'
+        JAXLIB_VERSION: '0.4.9'
     steps:
       - uses: actions/checkout@v3
 
