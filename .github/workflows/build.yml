@@ -31,6 +31,11 @@ jobs:
               gcc \
               g++
 
+      - name: Set python executables
+        run: |
+          ln -s /opt/python/cp${PYTHON_VERSION}-cp${PYTHON_VERSION}/bin/pip /usr/local/bin/pip
+          ln -s /opt/python/cp${PYTHON_VERSION}-cp${PYTHON_VERSION}/bin/python /usr/local/bin/python
+
       - name: Install pip dependencies
         run: pip install numpy wheel build auditwheel
 
