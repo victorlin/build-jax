@@ -20,7 +20,7 @@ jobs:
 
       - name: Get source code for JAX version
         run: |
-          git config --global --add safe.directory .
+          git config --global --add safe.directory $(pwd)
           git fetch origin 'refs/tags/*:refs/tags/*'
           git -c user.name='NULL' -c user.email='NULL' merge --squash jax-v${JAXLIB_VERSION} --allow-unrelated-histories --no-commit
 
