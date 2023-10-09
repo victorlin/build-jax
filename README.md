@@ -1,0 +1,7 @@
+_from https://github.com/nextstrain/docker-base/issues/119#issuecomment-1648337959_
+
+This is an unfinished attempt to compile an AARCH64 version of JAX on a GitHub-hosted Linux runner (AMD64).
+
+I briefly tried building via Docker under emulation, which was [unsuccessful](https://github.com/victorlin/jax/actions/runs/5593165693/job/15149873309). Even if it were successful, it would probably take longer than the maximum allowed GitHub Actions workflow run time.
+
+Then, I focused on cross-compiling since that [has been done before](https://github.com/google/jax/issues/7097#issuecomment-1216826398). I attempted this first with then without Docker (for easier debugging of individual commands as GitHub Actions steps). With a 3.5 hour [run](https://github.com/victorlin/jax/actions/runs/5605615210) time, I was able to build a file `jaxlib-0.4.9-cp310-cp310-manylinux2014_aarch64.whl` (a downloadable artifact of the linked run). However, I'm not sure that this wheel works because `auditwheel repair` failed on the file. I think the failure makes sense because I didn't use a manylinux Docker image. To address that, I [tried](https://github.com/victorlin/jax/compare/8be9738dfd1e25a26d97fde07da364713110d662...a9de12a09e7941d4e77c2c14c999927ab1da8bc4) building with [`messense/manylinux2014-cross:x86_64`](https://github.com/rust-cross/manylinux-cross) but had troubles running the setup commands before the actual JAX build.
